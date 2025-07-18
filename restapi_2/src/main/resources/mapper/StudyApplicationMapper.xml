@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.restapi.mapper.StudyApplicationMapper">
+
+    <insert id="insert" parameterType="com.koreait.restapi.entity.StudyApplication">
+        INSERT INTO study_application (member_id, board_id, applied_at)
+        VALUES (#{member.id}, #{study.id}, #{appliedAt})
+    </insert>
+
+    <select id="findByMemberIdAndStudyId" resultType="com.koreait.restapi.entity.StudyApplication">
+        SELECT * FROM study_application
+        WHERE member_id = #{memberId} AND board_id = #{studyId}
+    </select>
+
+    <select id="countByStudyId" resultType="int">
+        SELECT COUNT(*) FROM study_application WHERE board_id = #{studyId}
+    </select>
+
+    <select id="findByMemberId" resultType="com.koreait.restapi.entity.StudyApplication">
+        SELECT * FROM study_application WHERE member_id = #{memberId}
+    </select>
+
+
+</mapper>

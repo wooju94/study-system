@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.restapi.mapper.BoardMapper">
+    <insert id="insertBoard" parameterType="com.koreait.restapi.dto.BoardDTO">
+        INSERT INTO board (title, content, writer_id, deadline, capacity)
+        VALUES (
+                   #{title},
+                   #{content},
+                   #{writerId},
+                   #{deadline, jdbcType=DATE},
+                   #{capacity}
+               )
+    </insert>
+
+
+
+
+    <select id="selectBoardList" resultType="com.koreait.restapi.dto.BoardDTO">
+        SELECT b.*, m.username as writerName
+        FROM board b
+                 JOIN member m ON b.writer_id = m.id
+        ORDER BY b.id DESC
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectBoardCount" resultType="int">
+        SELECT COUNT(*) FROM board
+    </select>
+
+    <select id="selectBoardById" parameterType="int" resultType="com.koreait.restapi.dto.BoardDTO">
+        SELECT b.*, m.username as writerName
+        FROM board b
+                 JOIN member m ON b.writer_id = m.id
+        WHERE b.id = #{id}
+    </select>
+
+    <update id="updateBoard" parameterType="com.koreait.restapi.dto.BoardDTO">
+        UPDATE board
+        SET title = #{title}, content = #{content}
+        WHERE id = #{id} AND writer_id = #{writerId}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM board WHERE id = #{id}
+    </delete>
+    <select id="findByWriterId" parameterType="int" resultType="com.koreait.restapi.dto.BoardDTO">
+        SELECT * FROM board WHERE writer_id = #{writerId} ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" resultType="com.koreait.restapi.dto.BoardDTO">
+        SELECT * FROM board WHERE id = #{id}
+    </select>
+
+    <resultMap id="boardResultMap" type="com.koreait.restapi.dto.BoardDTO">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="writerId" column="writer_id"/>
+        <result property="writerName" column="writer_name"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="deadline" column="deadline"/>  <!-- 추가 -->
+        <result property="capacity" column="capacity"/>  <!-- 추후 추가 예정 -->
+    </resultMap>
+
+</mapper>
